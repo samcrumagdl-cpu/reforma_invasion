@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Estratégico · Reformas Electorales · Guadalajara 2027</title>
+<style>
+  :root {
+    --bg-primary:    #0a0f1e;
+    --bg-secondary:  #111827;
+    --bg-card:       #1a2235;
+    --bg-card-hover: #1e293b;
+    --border:        #2d3748;
+    --border-accent: #3b4a6b;
+    --text-primary:  #e2e8f0;
+    --text-secondary:#94a3b8;
+    --text-muted:    #64748b;
+    --blue:          #3b82f6;
+    --blue-light:    #60a5fa;
+    --blue-dark:     #1d4ed8;
+    --green:         #22c55e;
+    --green-dark:    #15803d;
+    --amber:         #f59e0b;
+    --amber-dark:    #b45309;
+    --red:           #ef4444;
+    --red-dark:      #b91c1c;
+    --critical:      #dc2626;
+    --purple:        #8b5cf6;
+    --cyan:          #06b6d4;
+    --shadow:        0 4px 24px rgba(0,0,0,0.4);
+    --radius:        8px;
+    --radius-lg:     12px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
+  .topbar { background: linear-gradient(90deg, #0d1b3e 0%, #1a2a5e 50%, #0d1b3e 100%); border-bottom: 2px solid var(--blue-dark); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 20px rgba(0,0,0,0.6); }
+  .topbar-left { display: flex; align-items: center; gap: 14px; }
+  .topbar-badge { background: var(--red); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 4px; animation: pulse-badge 2s infinite; }
+  @keyframes pulse-badge { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+  .topbar h1 { font-size: 16px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+  .topbar h1 span { color: var(--blue-light); }
+  .topbar-right { display: flex; align-items: center; gap: 16px; }
+  .topbar-date { font-size: 12px; color: var(--text-secondary); background: rgba(255,255,255,0.05); padding: 4px 12px; border-radius: 4px; border: 1px solid var(--border); }
+  .topbar-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--amber); }
+  .dot-live { width: 8px; height: 8px; background: var(--amber); border-radius: 50%; animation: blink 1.5s infinite; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+  .nav-bar { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
+  .nav-bar::-webkit-scrollbar { display: none; }
+  .nav-item { padding: 12px 18px; font-size: 13px; color: var(--text-secondary); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.2s; user-select: none; }
+  .nav-item:hover { color: var(--text-primary); background: rgba(255,255,255,0.03); }
+  .nav-item.active { color: var(--blue-light); border-bottom-color: var(--blue-light); font-weight: 600; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 28px 24px; }
+  .section { display: none; }
+  .section.active { display: block; }
+  .source-notice { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); border-radius: var(--radius); padding: 12px 18px; margin-bottom: 24px; font-size: 13px; color: var(--amber); display: flex; align-items: flex-start; gap: 10px; }
+  .source-notice .icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px; transition: all 0.2s; }
+  .card:hover { border-color: var(--border-accent); background: var(--bg-card-hover); }
+  .card-title { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .card-title .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); }
+  .section-header { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .section-header h2 { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .section-header p { font-size: 13px; color: var(--text-secondary); }
+  .semaforo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .semaforo-card { border-radius: var(--radius-lg); padding: 20px; border: 1px solid; position: relative; overflow: hidden; transition: transform 0.2s; }
+  .semaforo-card:hover { transform: translateY(-2px); }
+  .semaforo-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+  .semaforo-verde { background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.3); }
+  .semaforo-verde::before { background: var(--green); }
+  .semaforo-verde .sem-level { color: var(--green); }
+  .semaforo-amarillo { background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.3); }
+  .semaforo-amarillo::before { background: var(--amber); }
+  .semaforo-amarillo .sem-level { color: var(--amber); }
+  .semaforo-naranja { background: rgba(249,115,22,0.08); border-color: rgba(249,115,22,0.3); }
+  .semaforo-naranja::before { background: #f97316; }
+  .semaforo-naranja .sem-level { color: #f97316; }
+  .semaforo-rojo { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.3); }
+  .semaforo-rojo::before { background: var(--red); }
+  .semaforo-rojo .sem-level { color: var(--red); }
+  .semaforo-critico { background: rgba(220,38,38,0.12); border-color: rgba(220,38,38,0.5); }
+  .semaforo-critico::before { background: var(--critical); }
+  .semaforo-critico .sem-level { color: var(--critical); }
+  .sem-icon { font-size: 28px; margin-bottom: 10px; }
+  .sem-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 6px; }
+  .sem-level { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+  .sem-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+  .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .badge-bajo    { background: rgba(34,197,94,0.15);  color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .badge-medio   { background: rgba(245,158,11,0.15); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+  .badge-alto    { background: rgba(249,115,22,0.15); color: #f97316; border: 1px solid rgba(249,115,22,0.3); }
+  .badge-critico { background: rgba(220,38,38,0.15);  color: var(--red);   border: 1px solid rgba(220,38,38,0.4); }
+  .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { background: #0d1b3e; padding: 12px 14px; text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  tbody tr:hover { background: rgba(255,255,255,0.03); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody td { padding: 12px 14px; vertical-align: top; color: var(--text-primary); line-height: 1.5; }
+  .reforma-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; white-space: nowrap; }
+  .reforma-1 { background: rgba(59,130,246,0.15); color: var(--blue-light); border: 1px solid rgba(59,130,246,0.3); }
+  .reforma-2 { background: rgba(139,92,246,0.15); color: #a78bfa; border: 1px solid rgba(139,92,246,0.3); }
+  .timeline { position: relative; padding-left: 36px; }
+  .timeline::before { content: ''; position: absolute; left: 12px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(to bottom, var(--blue-dark), var(--border)); }
+  .timeline-item { position: relative; margin-bottom: 24px; }
+  .timeline-dot { position: absolute; left: -30px; top: 6px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid; background: var(--bg-primary); }
+  .dot-completado { border-color: var(--green); background: rgba(34,197,94,0.2); }
+  .dot-en-proceso { border-color: var(--amber); background: rgba(245,158,11,0.2); animation: pulse-dot 2s infinite; }
+  .dot-pendiente  { border-color: var(--border); }
+  .dot-critico    { border-color: var(--red); background: rgba(239,68,68,0.2); }
+  @keyframes pulse-dot { 0%, 100% { box-shadow: 0 0 0 0 rgba(245,158,11,0.4); } 50% { box-shadow: 0 0 0 6px rgba(245,158,11,0); } }
+  .timeline-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; transition: border-color 0.2s; }
+  .timeline-content:hover { border-color: var(--border-accent); }
+  .timeline-date { font-size: 11px; color: var(--text-muted); font-weight: 600; letter-spacing: 0.5px; margin-bottom: 4px; text-transform: uppercase; }
+  .timeline-title { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+  .timeline-body { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .timeline-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; background: rgba(59,130,246,0.1); color: var(--blue-light); border: 1px solid rgba(59,130,246,0.2); }
+  .escenario-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px; border-left: 4px solid; transition: all 0.2s; }
+  .escenario-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .esc-conservador { border-left-color: var(--green); }
+  .esc-moderado    { border-left-color: var(--amber); }
+  .esc-alto        { border-left-color: #f97316; }
+  .esc-critico     { border-left-color: var(--red); }
+  .esc-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .esc-icon { font-size: 28px; }
+  .esc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 2px; }
+  .esc-title { font-size: 16px; font-weight: 800; color: #fff; }
+  .esc-prob { margin-left: auto; text-align: right; }
+  .esc-prob-val { font-size: 22px; font-weight: 800; }
+  .esc-prob-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .esc-body { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 14px; }
+  .esc-impacts { display: flex; flex-direction: column; gap: 6px; }
+  .esc-impact-item { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text-secondary); }
+  .esc-impact-item::before { content: '→'; color: var(--text-muted); flex-shrink: 0; margin-top: 1px; }
+  .riesgo-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; display: flex; flex-direction: column; gap: 10px; transition: all 0.2s; cursor: default; }
+  .riesgo-card:hover { border-color: var(--border-accent); background: var(--bg-card-hover); }
+  .riesgo-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .riesgo-icon-label { display: flex; align-items: center; gap: 8px; }
+  .riesgo-icon { font-size: 20px; }
+  .riesgo-category { font-size: 12px; font-weight: 700; color: var(--text-primary); }
+  .riesgo-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+  .riesgo-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 4px; }
+  .riesgo-actor { font-size: 11px; color: var(--text-muted); }
+  .rec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; }
+  .rec-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; transition: all 0.2s; }
+  .rec-card:hover { border-color: var(--border-accent); }
+  .rec-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .rec-num { width: 32px; height: 32px; background: linear-gradient(135deg, var(--blue-dark), var(--blue)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #fff; flex-shrink: 0; }
+  .rec-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+  .rec-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .rec-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .rec-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+  .rec-list li::before { content: '◆'; color: var(--blue); font-size: 8px; flex-shrink: 0; margin-top: 5px; }
+  .rec-priority { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 12px; }
+  .priority-inmediata { background: rgba(220,38,38,0.15); color: var(--red); border: 1px solid rgba(220,38,38,0.3); }
+  .priority-urgente   { background: rgba(249,115,22,0.15); color: #f97316; border: 1px solid rgba(249,115,22,0.3); }
+  .priority-preventiva{ background: rgba(245,158,11,0.15); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+  .priority-continua  { background: rgba(59,130,246,0.15); color: var(--blue-light); border: 1px solid rgba(59,130,246,0.3); }
+  .resumen-reforma { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px; margin-bottom: 18px; }
+  .resumen-reforma-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 14px; }
+  .reforma-num { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
+  .reforma-num-1 { background: rgba(59,130,246,0.2); color: var(--blue-light); border: 1px solid rgba(59,130,246,0.3); }
+  .reforma-num-2 { background: rgba(139,92,246,0.2); color: #a78bfa; border: 1px solid rgba(139,92,246,0.3); }
+  .reforma-info h3 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+  .reforma-info p { font-size: 12px; color: var(--text-muted); }
+  .reforma-body { font-size: 13px; color: var(--text-secondary); line-height: 1.8; }
+  .reforma-body strong { color: var(--text-primary); font-weight: 600; }
+  .reforma-destacados { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .destacado-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-secondary); }
+  .destacado-item .icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .progress-bar-wrap { background: rgba(255,255,255,0.05); border-radius: 4px; height: 6px; overflow: hidden; margin-top: 8px; }
+  .progress-bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+  .page-footer { margin-top: 48px; padding: 20px 24px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--text-muted); flex-wrap: wrap; gap: 8px; }
+  .footer-nota { font-style: italic; max-width: 600px; line-height: 1.5; }
+  @media (max-width: 1024px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } .grid-3 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 768px) { .topbar { padding: 12px 16px; } .topbar h1 { font-size: 13px; } .container { padding: 16px 14px; } .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } .semaforo-grid { grid-template-columns: repeat(2, 1fr); } .nav-bar { padding: 0 14px; } .nav-item { padding: 10px 12px; font-size: 12px; } }
+  @media (max-width: 480px) { .semaforo-grid { grid-template-columns: 1fr; } }
+  .mb-4{margin-bottom:16px}.mb-6{margin-bottom:24px}.mb-8{margin-bottom:32px}.mt-4{margin-top:16px}.text-sm{font-size:13px}.text-xs{font-size:12px}.text-muted{color:var(--text-muted)}.fw-bold{font-weight:700}.color-blue{color:var(--blue-light)}.color-amber{color:var(--amber)}.color-red{color:var(--red)}.color-green{color:var(--green)}.gap-divider{height:1px;background:var(--border);margin:28px 0}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-badge">⚡ MONITOREO ACTIVO</span>
+    <h1>TABLERO ESTRATÉGICO · <span>REFORMAS ELECTORALES</span> · GUADALAJARA 2027</h1>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-date" id="currentDate">Actualizado: —</div>
+    <div class="topbar-status"><span class="dot-live"></span> Proceso legislativo en curso</div>
+  </div>
+</div>
+<nav class="nav-bar" id="mainNav">
+  <div class="nav-item active" data-section="resumen">📋 Resumen Ejecutivo</div>
+  <div class="nav-item" data-section="semaforo">🚦 Semáforo</div>
+  <div class="nav-item" data-section="riesgos">⚠️ Mapa de Riesgos</div>
+  <div class="nav-item" data-section="matriz">📊 Matriz de Impacto</div>
+  <div class="nav-item" data-section="timeline">📅 Línea de Tiempo</div>
+  <div class="nav-item" data-section="escenarios">🎯 Escenarios</div>
+  <div class="nav-item" data-section="recomendaciones">🛡️ Recomendaciones</div>
+</nav>
+<div class="container">
+  <div class="source-notice">
+    <span class="icon">📌</span>
+    <div><strong>Fuentes documentales integradas:</strong> <strong>R2 — DOCUMENTADO:</strong> Iniciativa con Proyecto de Decreto (Dr. Ricardo Monreal Ávila, MORENA, LXVI Legislatura). Reforma Arts. 75 inc. k), 78 Bis y adiciona Art. 78 Ter de la LGSMIME. Publicada en Gaceta Parlamentaria 26/05/2026. · <strong>R1 — PENDIENTE DE DOCUMENTO:</strong> Reforma en materia de integridad en candidaturas (contenido basado en conocimiento público). Para actualizar R1, agregar su texto en <code style="background:rgba(255,255,255,0.1);padding:1px 5px;border-radius:3px;">DATA_REFORMAS[0]</code>.</div>
+  </div>
+  <section id="resumen" class="section active">
+    <div class="section-header"><h2>📋 Resumen Ejecutivo</h2><p>Análisis estratégico de reformas electorales con impacto potencial en el proceso municipal de Guadalajara 2027</p></div>
+    <div class="grid-4 mb-6" id="kpiGrid"></div>
+    <div id="reformasResumen"></div>
+    <div class="card mb-6">
+      <div class="card-title"><span class="dot"></span> RELEVANCIA PARA GUADALAJARA 2027</div>
+      <div class="reforma-body">
+        <p>Guadalajara es la segunda ciudad más importante del país, capital de Jalisco y escenario de alta competencia política entre el PAN, Movimiento Ciudadano y MORENA. La candidatura de <strong>Verónica Delgadillo</strong> a la alcaldía municipal opera en un entorno donde cualquier reforma electoral aprobada antes del proceso de 2027 puede modificar:</p><br>
+        <ul style="padding-left:18px;color:var(--text-secondary);font-size:13px;line-height:2;list-style-type:disc;">
+          <li>Los <strong>requisitos de elegibilidad</strong> para registrar la candidatura ante el INE/IEPC Jalisco</li>
+          <li>Los <strong>mecanismos de impugnación</strong> que pueden activar fuerzas políticas contrarias</li>
+          <li>La <strong>vulnerabilidad jurídica</strong> del proceso ante declaratorias de nulidad</li>
+          <li>Las <strong>obligaciones documentales</strong> de campaña, proveedores y financiamiento</li>
+          <li>El <strong>marco de responsabilidad</strong> ante contenidos en redes sociales de terceros</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card"><div class="card-title"><span class="dot"></span> TIPOLOGÍA DE RIESGOS IDENTIFICADOS</div><div class="grid-3" id="tipoRiesgosGrid"></div></div>
+  </section>
+  <section id="semaforo" class="section">
+    <div class="section-header"><h2>🚦 Semáforo Ejecutivo</h2><p>Estado actual de alerta por dimensión de riesgo · Se actualiza conforme avanza el proceso legislativo</p></div>
+    <div class="semaforo-grid" id="semaforoGrid"></div>
+    <div class="card mt-4">
+      <div class="card-title"><span class="dot"></span> LEYENDA DE NIVELES</div>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:13px;">
+        <span><span class="badge badge-bajo">BAJO</span> — Sin riesgo inmediato. Monitoreo rutinario.</span>
+        <span><span class="badge badge-medio">MEDIO</span> — Riesgo latente. Preparación preventiva.</span>
+        <span><span class="badge badge-alto">ALTO</span> — Riesgo activo. Acción estratégica requerida.</span>
+        <span><span class="badge badge-critico">CRÍTICO</span> — Riesgo operacional. Respuesta inmediata.</span>
+      </div>
+    </div>
+  </section>
+  <section id="riesgos" class="section">
+    <div class="section-header"><h2>⚠️ Mapa de Riesgos</h2><p>Clasificación por categoría de riesgo derivado de ambas reformas en el contexto de Guadalajara</p></div>
+    <div class="grid-3" id="riesgosGrid"></div>
+  </section>
+  <section id="matriz" class="section">
+    <div class="section-header"><h2>📊 Matriz de Impacto</h2><p>Cruce entre reforma, mecanismo, impacto potencial en Guadalajara, nivel de riesgo, actor afectado y acción preventiva</p></div>
+    <div class="table-wrap"><table><thead><tr><th>Reforma</th><th>Artículo / Mecanismo</th><th>Impacto en Guadalajara</th><th>Nivel</th><th>Actor Afectado</th><th>Acción Preventiva</th></tr></thead><tbody id="matrizBody"></tbody></table></div>
+  </section>
+  <section id="timeline" class="section">
+    <div class="section-header"><h2>📅 Línea de Tiempo Legislativa y Electoral</h2><p>Hitos clave · Fechas estimadas · Puntos de decisión crítica</p></div>
+    <div class="timeline" id="timelineContainer"></div>
+  </section>
+  <section id="escenarios" class="section">
+    <div class="section-header"><h2>🎯 Escenarios Estratégicos</h2><p>Cuatro escenarios de evolución del marco normativo y su impacto diferenciado en la candidatura</p></div>
+    <div class="grid-2" id="escenariosGrid"></div>
+  </section>
+  <section id="recomendaciones" class="section">
+    <div class="section-header"><h2>🛡️ Recomendaciones Estratégicas</h2><p>Líneas de acción preventiva organizadas por área de intervención · Distinción entre hechos, interpretación y recomendación</p></div>
+    <div class="rec-grid" id="recGrid"></div>
+  </section>
+  <div class="page-footer">
+    <div class="footer-nota">⚖️ <strong>Aviso:</strong> Este documento es una herramienta de análisis estratégico. No constituye propaganda política ni opinión jurídica formal. El contenido distingue entre hechos documentados, interpretación estratégica y recomendaciones preventivas.</div>
+    <div>Dashboard v1.1 · R2 documentada (Monreal/MORENA/LGSMIME) · Guadalajara 2027 · Uso interno estratégico</div>
+  </div>
+</div>
+<script>
+const DATA_REFORMAS = [
+  { id:1, num:"R1", clase:"reforma-num-1", titulo:"Reforma en Materia de Integridad en Candidaturas", subtitulo:"Iniciativa legislativa · Proceso de aprobación en curso", cuerpo:`Esta reforma establece <strong>requisitos adicionales de integridad</strong> para quienes aspiren a ocupar cargos de elección popular. Introduce obligaciones declarativas ampliadas, mecanismos de verificación de antecedentes penales y patrimoniales, así como posibles causales de inelegibilidad sobrevenida. Su objetivo declarado es garantizar que los candidatos que participen en procesos electorales no tengan vínculos con actividades ilícitas, conflictos de interés no revelados ni impedimentos legales derivados de cargos o funciones previas.`, destacados:[{icon:"📄",texto:"Declaraciones patrimoniales y de intereses ampliadas como requisito de registro"},{icon:"🔍",texto:"Mecanismos de verificación de antecedentes en registros criminales y administrativos"},{icon:"⛔",texto:"Nuevas causales de inelegibilidad por vínculos con figuras o actividades sancionadas"},{icon:"⏱️",texto:"Plazos y procedimientos de impugnación ante autoridades electorales"},{icon:"🏛️",texto:"Coordinación entre autoridades electorales (INE/IEPC) y autoridades de seguridad"}] },
+  { id:2, num:"R2", clase:"reforma-num-2", titulo:"Reforma sobre Causales de Nulidad Electoral por Intervención o Injerencia Extranjera", subtitulo:"Iniciativa: Dr. Ricardo Monreal Ávila · MORENA · LXVI Legislatura · Gaceta Parlamentaria 26/05/2026 — DOCUMENTO ORIGINAL INTEGRADO", cuerpo:`<strong>[HECHO DOCUMENTADO]</strong> Iniciativa con Proyecto de Decreto que reforma el <strong>inciso k) del Art. 75</strong> y el <strong>párrafo primero del Art. 78 Bis</strong>, y adiciona el <strong>Art. 78 Ter</strong> de la Ley General del Sistema de Medios de Impugnación en Materia Electoral (LGSMIME). Fundamento constitucional: Art. 40 párr. 2 CPEUM (prohibición de injerencia extranjera en elecciones) y Art. 41 Base VI CPEUM. El Art. 78 Ter establece que la nulidad procede cuando exista <em>"prueba plena y fehaciente"</em> de que <em>"gobiernos extranjeros, organismos internacionales, entidades privadas extranjeras, personas físicas o morales extranjeras, o cualquier otro ente con origen fuera del territorio nacional"</em> hayan intervenido de manera <em>"grave, dolosa y determinante"</em>. Consecuencia adicional: el candidato o partido <strong>beneficiado por la intervención queda impedido para participar en los comicios subsecuentes</strong>. Precedentes internacionales citados: Ucrania 2004 y Rumania 2024. Transitorio Quinto: legislaturas locales deben armonizar <strong>antes del 5 de junio de 2026</strong>.`, destacados:[{icon:"📜",texto:"Art. 75 inc. k) LGSMIME: añade injerencia extranjera como irregularidad grave que nulifica votación en casilla"},{icon:"⚖️",texto:"Art. 78 Bis: vincula causales de nulidad de elección federal/local con Art. 40 párr. 2 CPEUM (intervención extranjera)"},{icon:"🆕",texto:"Art. 78 Ter (NUEVO): define 6 fracciones de actos lesivos + cláusula abierta (Frac. VI): 'cualquier conducta que comprometa la soberanía o autenticidad del sufragio'"},{icon:"🚨",texto:"Sanción adicional: candidato/partido beneficiado por injerencia QUEDA IMPEDIDO para participar en elecciones subsecuentes"},{icon:"📅",texto:"Transitorio Quinto: legislaturas locales (incluida Jalisco) deben armonizar normativa antes del 5 de junio de 2026"},{icon:"🔒",texto:"Transitorio Segundo: solo aplica a procesos electorales que INICIEN con posterioridad a su entrada en vigor"}] }
+];
+const DATA_KPI = [
+  {label:"Reformas en Análisis",valor:"2",icono:"📜",color:"var(--blue-light)"},
+  {label:"Nivel de Riesgo Global",valor:"ALTO",icono:"⚠️",color:"#f97316"},
+  {label:"Meses para Proceso 2027",valor:"~14",icono:"📅",color:"var(--amber)"},
+  {label:"Áreas de Acción Preventiva",valor:"7",icono:"🛡️",color:"var(--green)"}
+];
+const DATA_TIPOS_RIESGO = [
+  {icono:"⚖️",titulo:"Jurídico-Electoral",desc:"Incumplimiento de nuevos requisitos normativos que puede derivar en inelegibilidad o nulidad de registros.",nivel:"alto"},
+  {icono:"📋",titulo:"De Candidatura",desc:"Requisitos adicionales de integridad pueden imponer cargas documentales o administrativas sobre la candidata o el equipo.",nivel:"medio"},
+  {icono:"🔴",titulo:"De Impugnación",desc:"Las nuevas causales abren espacios para que la oposición interponga recursos con base en los nuevos tipos normativos.",nivel:"alto"},
+  {icono:"🚫",titulo:"De Nulidad",desc:"Actividad de campaña que se vincule, aunque sea indirectamente, con actores extranjeros puede activar causales de nulidad.",nivel:"critico"},
+  {icono:"📰",titulo:"Reputacional",desc:"La sola presentación de impugnaciones o denuncias puede utilizarse con fines de daño reputacional previo a la jornada.",nivel:"alto"},
+  {icono:"📢",titulo:"De Narrativa Pública",desc:"Las reformas pueden ser usadas discursivamente para instalar dudas sobre la legitimidad de la candidatura o el partido.",nivel:"medio"}
+];
+const DATA_SEMAFORO = [
+  {icono:"⚡",label:"Riesgo Inmediato",nivel:"MEDIO",clase:"semaforo-amarillo",desc:"Las reformas están en proceso de discusión. Sin aprobación formal, el impacto operativo directo es limitado pero el entorno de incertidumbre jurídica ya está activo.",progreso:55,colorProg:"var(--amber)"},
+  {icono:"🏛️",label:"Riesgo Legislativo",nivel:"ALTO",clase:"semaforo-naranja",desc:"Alta probabilidad de que al menos alguno de los mecanismos propuestos avance en el Congreso antes del inicio del proceso electoral 2026-2027.",progreso:70,colorProg:"#f97316"},
+  {icono:"⚙️",label:"Riesgo Operativo",nivel:"ALTO",clase:"semaforo-naranja",desc:"La preparación documental, financiera y de proveedores de campaña requiere ajustes preventivos para cumplir con posibles nuevos estándares de integridad.",progreso:68,colorProg:"#f97316"},
+  {icono:"⚖️",label:"Riesgo de Judicialización",nivel:"ALTO",clase:"semaforo-naranja",desc:"En un contexto electoral competitivo, actores opositores pueden instrumentalizar las nuevas causales para interponer recursos ante el TEPJF o Sala Regional Guadalajara.",progreso:72,colorProg:"#f97316"},
+  {icono:"📢",label:"Riesgo de Narrativa",nivel:"CRÍTICO",clase:"semaforo-critico",desc:"El debate público sobre injerencia extranjera y perfiles de candidatos puede convertirse en arma discursiva. La narrativa de 'sospecha' se instala antes de que exista resolución formal.",progreso:85,colorProg:"var(--red)"},
+  {icono:"🌐",label:"Riesgo Digital / Desinformación",nivel:"CRÍTICO",clase:"semaforo-critico",desc:"La Reforma R2 amplía la exposición ante contenidos virales de origen no identificado. Campañas de desinformación pueden invocarse como evidencia en procedimientos de nulidad.",progreso:80,colorProg:"var(--red)"}
+];
+const DATA_RIESGOS = [
+  {icono:"⚖️",categoria:"Riesgo Jurídico-Electoral",nivel:"alto",desc:"Los nuevos estándares de integridad podrían ampliar el catálogo de causales de negativa de registro o cancelación de candidatura, ya sea por omisión documental o por interpretación extensiva de las autoridades.",actor:"Candidata · Partido · IEPC Jalisco · INE"},
+  {icono:"📋",categoria:"Riesgo de Candidatura",nivel:"medio",desc:"Se anticipan declaraciones más exhaustivas sobre patrimonio, vínculos con empresas, participación en cargos públicos previos y posibles conflictos de interés. Errores u omisiones pueden ser utilizados como base de impugnación.",actor:"Candidata · Equipo jurídico · Partido"},
+  {icono:"🔴",categoria:"Riesgo de Impugnación",nivel:"alto",desc:"La ampliación de causales en ambas reformas incrementa la superficie de ataque jurídico. La oposición puede interponer JI, RAP o JDC instrumentalizando los nuevos tipos normativos.",actor:"Candidata · Partido · TEPJF · Sala Regional Guadalajara"},
+  {icono:"🚫",categoria:"Riesgo de Nulidad Electoral",nivel:"critico",desc:"La Reforma R2 podría permitir impugnar el resultado electoral invocando injerencia extranjera, incluso si esta es indirecta o difícil de probar. Una nulidad implicaría repetición de la elección.",actor:"Candidata · Partido · Ciudadanía · Autoridades electorales"},
+  {icono:"📰",categoria:"Riesgo Reputacional",nivel:"alto",desc:"Las investigaciones, procedimientos o denuncias ante el INE o el TEPJF, aunque no prosperen, producen ciclos mediáticos dañinos. La sola apertura de un expediente puede ser usada para instalar dudas sobre la candidatura.",actor:"Candidata · Movimiento Ciudadano · Comunicación"},
+  {icono:"📢",categoria:"Riesgo de Narrativa Pública",nivel:"alto",desc:"Los adversarios pueden usar el marco discursivo de las reformas para construir relatos de sospecha aunque no exista sustento legal. Las redes sociales amplifican estos relatos.",actor:"Candidata · Partido · Medios · Ciudadanía"},
+  {icono:"🌐",categoria:"Riesgo de Desinformación",nivel:"critico",desc:"Campañas coordinadas de desinformación, bots o cuentas inorgánicas pueden ser invocadas como evidencia de 'injerencia extranjera'. La infraestructura digital de campaña debe ser auditada y trazable.",actor:"Candidata · Equipo digital · INE · Seguridad"},
+  {icono:"🏛️",categoria:"Riesgo de Coordinación Institucional",nivel:"medio",desc:"[DOCUMENTADO] El Art. 78 Ter párr. 4 asigna al TEPJF la resolución bajo principios de legalidad, certeza, objetividad e imparcialidad. No menciona expresamente a dependencias de seguridad, pero el marco de investigación las involucra implícitamente.",actor:"INE · TEPJF · IEPC Jalisco · FGR"},
+  {icono:"🔓",categoria:"Riesgo por Cláusula Abierta (Art. 78 Ter Frac. VI)",nivel:"critico",desc:"[DOCUMENTADO — MAYOR RIESGO ESTRATÉGICO] La Fracción VI del Art. 78 Ter es una cláusula residual: 'cualquier conducta que, conforme a la valoración jurisdiccional, comprometa la soberanía o afecte la autenticidad del sufragio'. Otorga al TEPJF discrecionalidad casi ilimitada para calificar actos no previstos expresamente. Es la causal más peligrosa de toda la iniciativa.",actor:"TEPJF · Candidata · Partido · Cualquier actor"},
+  {icono:"🚫",categoria:"Riesgo de Inhabilitación Post-Electoral (Art. 78 Ter párr. 2)",nivel:"critico",desc:"[DOCUMENTADO] Si se declara nulidad por injerencia y se determina que la candidatura 'resultó beneficiada', la persona y el partido quedan IMPEDIDOS para participar en los comicios subsecuentes. Esta consecuencia va más allá de la nulidad: es una inhabilitación política temporal de consecuencias sistémicas para Movimiento Ciudadano en Jalisco.",actor:"Candidata · Movimiento Ciudadano · Coalición · Jalisco"}
+];
+const DATA_MATRIZ = [
+  {reforma:"R1",mecanismo:"Declaraciones de integridad ampliadas",impacto:"Exige documentación patrimonial y de intereses más exhaustiva como requisito de registro. Posible rechazo por omisiones técnicas.",nivel:"alto",actor:"Candidata · Partido",accion:"Auditoría preventiva de declaraciones. Asesoría jurídico-electoral especializada desde ahora."},
+  {reforma:"R1",mecanismo:"Verificación de antecedentes criminales y administrativos",impacto:"Coordinación INE-FGR para cruzar padrones. Cualquier irregularidad administrativa puede activarse como causal.",nivel:"medio",actor:"Candidata · Equipo cercano",accion:"Revisión de constancias de inhabilitación y antecedentes. Extensivo al equipo operativo."},
+  {reforma:"R1",mecanismo:"Inelegibilidad por vínculos con personas o actividades sancionadas",impacto:"Definición amplia de 'vínculos' puede incluir relaciones profesionales, laborales o civiles de la candidata o su partido.",nivel:"alto",actor:"Candidata · Partido · Coalición",accion:"Mapeo de red de relaciones. Revisión de convenios, contratos y alianzas previas."},
+  {reforma:"R1",mecanismo:"Plazos de impugnación de requisitos de elegibilidad",impacto:"Si los nuevos plazos procesales son más cortos, el equipo jurídico debe estar listo para responder en tiempo real.",nivel:"medio",actor:"Equipo jurídico · Partido · INE",accion:"Preparar equipo jurídico electoral de guardia desde el inicio de precampaña."},
+  {reforma:"R2",mecanismo:"Art. 75 inc. k) — Injerencia extranjera como nulidad de casilla",impacto:"[HECHO DOCUMENTADO] Agrega 'injerencia extranjera que afecte la libertad o autenticidad del sufragio' como causal para anular la votación recibida en una casilla específica. Puede usarse en impugnaciones casilla por casilla en Guadalajara.",nivel:"critico",actor:"Candidata · Partido · TEPJF · Votantes",accion:"Asegurar que ningún acto en casilla o zona pueda vincularse a agentes externos. Monitoreo por sección electoral."},
+  {reforma:"R2",mecanismo:"Art. 78 Bis — Nulidad de elección local vinculada a Art. 40 CPEUM",impacto:"[HECHO DOCUMENTADO] Amplía las causales de nulidad de la elección completa de Guadalajara invocando Art. 40 párr. 2 CPEUM. Si Jalisco armoniza antes del 5/jun/2026, aplica plenamente al proceso local.",nivel:"critico",actor:"Candidata · Partido · Ciudadanía · IEPC Jalisco",accion:"Verificar si el Congreso de Jalisco armonizó la LGSMIME local antes del 5 de junio de 2026 (Transitorio Quinto)."},
+  {reforma:"R2",mecanismo:"Art. 78 Ter Frac. I — Financiamiento ilícito y manipulación digital extranjera",impacto:"[HECHO DOCUMENTADO] 'Financiamiento ilícito, propaganda, difusión sistemática de desinformación o manipulación digital' de origen extranjero son causales expresas. Cualquier proveedor digital extranjero queda bajo sospecha.",nivel:"critico",actor:"Candidata · Partido · Tesorería · Equipo digital",accion:"Auditoría exhaustiva de proveedores digitales. Verificar que toda publicidad y contratación sea de capital nacional trazable."},
+  {reforma:"R2",mecanismo:"Art. 78 Ter Frac. II — Intervención de gobiernos u organismos extranjeros",impacto:"[HECHO DOCUMENTADO] Cualquier declaración, apoyo o expresión pública de un gobierno extranjero a favor de la candidatura o partido puede invocarse como causal de nulidad.",nivel:"alto",actor:"Candidata · Partido · Relaciones externas",accion:"Protocolo de deslinde inmediato ante cualquier expresión de apoyo extranjero. No buscar ni aceptar gestos públicos de alineación con actores extranjeros."},
+  {reforma:"R2",mecanismo:"Art. 78 Ter Frac. III — Presión política, económica, diplomática o mediática",impacto:"[HECHO DOCUMENTADO] Contexto México-EE.UU. (aranceles, declaraciones diplomáticas) puede ser instrumentalizado para calificar cualquier posicionamiento de la candidata como resultado de 'presión externa'.",nivel:"alto",actor:"Candidata · Partido · Comunicación",accion:"Cuidar el encuadre público de posicionamientos en política exterior. Evitar que declaraciones se lean como alineación con presiones externas."},
+  {reforma:"R2",mecanismo:"Art. 78 Ter Frac. VI — Cláusula abierta: 'cualquier conducta que comprometa la soberanía'",impacto:"[HECHO DOCUMENTADO — RIESGO MÁXIMO] La fracción VI es una cláusula residual de amplísima discrecionalidad judicial. El TEPJF puede calificar como 'lesiva a la soberanía' conductas no previstas explícitamente. Es la disposición de mayor riesgo estratégico.",nivel:"critico",actor:"Candidata · Partido · TEPJF",accion:"Monitorear jurisprudencia del TEPJF sobre la fracción VI desde su aprobación. Preparar argumentario de inaplicabilidad ante su uso expansivo."},
+  {reforma:"R2",mecanismo:"Art. 78 Ter párr. 2 — Sanción: impedimento para elecciones subsecuentes",impacto:"[HECHO DOCUMENTADO — CONSECUENCIA SEVERA] El candidato o partido beneficiado por la injerencia queda IMPEDIDO para participar en los comicios subsecuentes. Esta sanción adicional eleva dramáticamente el riesgo de judicialización instrumentalizada.",nivel:"critico",actor:"Candidata · Movimiento Ciudadano · Coalición",accion:"Preparar defensa jurídica específica contra esta cláusula. Documentar que ningún acto de campaña invitó, aceptó ni se benefició de ninguna actuación extranjera."},
+  {reforma:"R1",mecanismo:"Género y paridad en nuevos requisitos",impacto:"Si la reforma no contempla reglas diferenciadas para candidatas, puede generar cargas desproporcionadas.",nivel:"bajo",actor:"Candidata · MC · INE",accion:"Verificar que la implementación de la reforma sea compatible con las obligaciones de paridad de género."}
+];
+const DATA_TIMELINE = [
+  {fecha:"26 de mayo de 2026",estado:"completado",titulo:"[HECHO DOCUMENTADO] Presentación de R2 en Comisión Permanente — Gaceta Parlamentaria",cuerpo:"El Dr. Ricardo Monreal Ávila (MORENA, LXVI Legislatura) somete formalmente ante la Comisión Permanente del Congreso la Iniciativa con Proyecto de Decreto que reforma Arts. 75 inc. k) y 78 Bis, y adiciona Art. 78 Ter de la LGSMIME. La iniciativa es publicada en la Gaceta Parlamentaria del 26 de mayo de 2026.",tags:["R2 — HECHO DOCUMENTADO","Monreal / MORENA","LGSMIME","Gaceta 26/05/2026","Comisión Permanente"]},
+  {fecha:"⚠️ FECHA CRÍTICA: 5 de junio de 2026",estado:"critico",titulo:"[TRANSITORIO QUINTO] Fecha límite para armonización por legislaturas locales",cuerpo:"[HECHO DOCUMENTADO — URGENTE] El Transitorio Quinto de la iniciativa establece que 'las legislaturas de las entidades federativas deberán armonizar el marco normativo antes del 5 de junio de 2026'. Si el Congreso de Jalisco armoniza, la causal de nulidad por injerencia extranjera aplicará plenamente al proceso local de Guadalajara 2027. Esta fecha es a 10 días de la presentación. Requiere verificación inmediata del estado legislativo en Jalisco.",tags:["URGENTE","Transitorio Quinto","Jalisco","Armonización","5 junio 2026","IEPC"]},
+  {fecha:"2026 — En proceso",estado:"en-proceso",titulo:"Dictaminación en Comisiones — Congreso de la Unión",cuerpo:"Las Comisiones de Gobernación y Asuntos Electorales deben dictaminar la iniciativa R2. Se esperan modificaciones, negociaciones entre grupos parlamentarios. La iniciativa es de MORENA (mayoría), por lo que tiene alta probabilidad de avance.",tags:["Comisiones","Dictamen","MORENA mayoría","Negociación parlamentaria"]},
+  {fecha:"Estimado: 2026 (tras dictaminación)",estado:"pendiente",titulo:"⚠️ Punto crítico: aprobación y publicación en el DOF",cuerpo:"Si R2 se aprueba y se publica en el Diario Oficial de la Federación antes de que inicie el proceso electoral 2026-2027, aplicará al proceso de Guadalajara 2027 conforme al Transitorio Segundo: 'solo aplica a procesos que INICIEN con posterioridad a la entrada en vigor'.",tags:["Fecha crítica","DOF","Transitorio Segundo","Entrada en vigor","Proceso Jalisco"]},
+  {fecha:"Estimado: Oct–Nov 2026",estado:"pendiente",titulo:"Inicio de periodo de precampaña — Proceso Jalisco 2027",cuerpo:"El IEPC Jalisco establece el calendario. La precampaña interna de los partidos es el primer momento donde los nuevos requisitos de integridad podrían exigirse.",tags:["IEPC Jalisco","Precampaña","Movimiento Ciudadano"]},
+  {fecha:"Estimado: Ene–Feb 2027",estado:"pendiente",titulo:"Registro oficial de candidaturas",cuerpo:"Momento más crítico: todos los requisitos de integridad deben estar cumplidos. El INE/IEPC revisarán declaraciones, antecedentes y documentación exigida.",tags:["Registro","INE","IEPC","Impugnaciones preventivas"]},
+  {fecha:"Estimado: Feb–May 2027",estado:"pendiente",titulo:"Periodo de campaña electoral",cuerpo:"Durante campaña se activa la vigilancia sobre financiamiento, proveedores y presencia digital. Cualquier actividad que pueda vincularse con actores extranjeros estará bajo escrutinio reforzado por la Reforma R2.",tags:["Campaña","Financiamiento","Monitoreo digital"]},
+  {fecha:"Estimado: Jun 2027",estado:"pendiente",titulo:"Jornada electoral y cómputos",cuerpo:"La jornada activa potencialmente las causales de nulidad de R2. Cualquier incidente digital, ciberataque atribuible o acusación de injerencia puede convertirse en argumento de impugnación post-electoral.",tags:["Jornada","Cómputos","Vigilancia"]},
+  {fecha:"Estimado: Jul–Ago 2027",estado:"pendiente",titulo:"Periodo de impugnaciones post-electorales",cuerpo:"El TEPJF y la Sala Regional Guadalajara resolverán los recursos. Este es el momento donde R2 puede activarse plenamente. La preparación jurídica y documental determinará el resultado.",tags:["TEPJF","Sala Regional Guadalajara","Nulidad","JI / RAP"]}
+];
+const DATA_ESCENARIOS = [
+  {id:"conservador",icono:"🟢",clase:"esc-conservador",labelColor:"var(--green)",label:"Escenario 1",titulo:"Las reformas no avanzan",probColor:"var(--green)",prob:"20%",cuerpo:"El proceso legislativo se estanca por falta de consenso. Ambas reformas quedan en dictaminación pendiente y no alcanzan a entrar en vigor antes del proceso electoral de Jalisco 2027.",impactos:["El proceso de Guadalajara 2027 se rige por el marco normativo actual (LGIPE, leyes locales vigentes)","Los requisitos de candidatura no se amplían más allá de lo ya establecido","La superficie de impugnación por injerencia extranjera no se expande","El entorno jurídico es conocido y predecible para todos los actores","Riesgo residual: uso discursivo de los temas aunque no haya reforma aprobada"]},
+  {id:"moderado",icono:"🟡",clase:"esc-moderado",labelColor:"var(--amber)",label:"Escenario 2",titulo:"Avanzan parcialmente",probColor:"var(--amber)",prob:"40%",cuerpo:"Se aprueba una versión acotada de alguna de las dos reformas, posiblemente con el contenido más consensuado (declaraciones patrimoniales adicionales o prohibición explícita de financiamiento extranjero) pero sin los mecanismos más controvertidos.",impactos:["Se exigen declaraciones adicionales de integridad sin mecanismos automáticos de cancelación","La prohibición de financiamiento extranjero se refuerza normativamente pero sin nuevas causales de nulidad","El equipo jurídico debe prepararse para un marco mixto con reglas parcialmente nuevas","Riesgo de interpretaciones discrecionales de normas incompletas","Impacto operativo manejable con preparación preventiva adecuada"]},
+  {id:"alto-impacto",icono:"🟠",clase:"esc-alto",labelColor:"#f97316",label:"Escenario 3",titulo:"Se aprueban antes del proceso",probColor:"#f97316",prob:"30%",cuerpo:"Ambas reformas son aprobadas e implementadas antes del inicio del proceso electoral de Jalisco 2027. Las nuevas reglas aplican plenamente a registros de candidaturas, financiamiento de campaña y causales de nulidad.",impactos:["Se requiere preparar documentación de integridad conforme a los nuevos estándares antes del registro","La infraestructura digital y de financiamiento de campaña debe ser auditada y documentada con anticipación","Incremento significativo de la carga jurídico-administrativa del equipo de campaña","Mayor exposición ante impugnaciones instrumentales por parte de la oposición","Necesidad de asesoría jurídica especializada en los nuevos tipos normativos"]},
+  {id:"critico",icono:"🔴",clase:"esc-critico",labelColor:"var(--red)",label:"Escenario 4",titulo:"Se usan para impugnar o anular",probColor:"var(--red)",prob:"10%",cuerpo:"Las reformas se aprovechan como base formal para interponer impugnaciones durante o después de la jornada electoral. En el escenario más severo, un resultado favorable es impugnado invocando causales de nulidad por injerencia extranjera, forzando una resolución del TEPJF.",impactos:["Impugnación formal de la candidatura ante el INE o el IEPC basada en los nuevos requisitos de integridad","Recurso de nulidad post-electoral invocando desinformación, financiamiento irregular o infraestructura digital","Proceso de meses ante Sala Regional Guadalajara y posible atracción por TEPJF","Campaña mediática paralela que erosiona la legitimidad del resultado","Necesidad de repositorio probatorio sólido, trazabilidad total y comunicación institucional robusta"]}
+];
+const DATA_RECOMENDACIONES = [
+  {num:"01",titulo:"Monitoreo Legislativo Continuo",sub:"Seguimiento en tiempo real del proceso de ambas reformas",prioridad:"inmediata",items:["Asignar a un responsable del seguimiento semanal del estado legislativo de ambas reformas","Suscripción a la Gaceta del Congreso y alertas sobre el Diario Oficial de la Federación","Red de contactos parlamentarios para obtener información anticipada sobre avances","Actualizar este dashboard conforme cambien los estados legislativos","Monitorear resoluciones del INE sobre la reglamentación de las reformas aprobadas"]},
+  {num:"02",titulo:"Blindaje Documental de Candidatura",sub:"Preparación anticipada de expediente de integridad",prioridad:"inmediata",items:["Elaborar declaración patrimonial, de intereses y de conflictos de interés en versión amplia","Obtener constancias de no inhabilitación, no sanción y antecedentes no penales","Documentar historial de cargos públicos, convenios y funciones anteriores","Preparar argumentario jurídico ante posibles señalamientos de vínculos o conflictos","Mantener expediente actualizado con fecha cierta mediante notaría pública"]},
+  {num:"03",titulo:"Revisión de Perfiles y Equipo",sub:"Debida diligencia de personas clave en la campaña",prioridad:"urgente",items:["Revisar los perfiles del equipo directivo y operativo de campaña bajo los nuevos estándares","Verificar que ningún colaborador tenga antecedentes incompatibles con la normativa","Establecer declaraciones internas de conflicto de interés para el equipo de confianza","Revisar convenios, alianzas y acuerdos previos del partido y la candidatura en Jalisco","Mantener actualizado el organigrama oficial del equipo de campaña"]},
+  {num:"04",titulo:"Control de Financiamiento y Proveedores",sub:"Trazabilidad total de recursos y contrataciones",prioridad:"urgente",items:["Implementar protocolo de verificación de origen de fondos de campaña","Revisar que todos los proveedores sean de capital estrictamente nacional","Documentar todos los contratos con empresas de tecnología, comunicación y logística","Verificar términos de servicio de plataformas digitales utilizadas (servidores, origen del capital)","Establecer sistema de facturación y comprobación documental desde el día uno de campaña"]},
+  {num:"05",titulo:"Ciberseguridad y Monitoreo Digital",sub:"Defensa ante desinformación e injerencia digital",prioridad:"urgente",items:["Auditoría de la infraestructura digital de campaña: CRMs, redes, herramientas de movilización","Implementar monitoreo 24/7 de menciones y contenidos virales relacionados con la candidatura","Establecer protocolo de deslinde y respuesta ante contenidos de origen dudoso o desinformación","Mantener bitácora digital con capturas de pantalla y metadata de incidentes","Contratar o designar responsable de ciberseguridad e inteligencia digital para la campaña"]},
+  {num:"06",titulo:"Preparación Jurídica Ante Impugnaciones",sub:"Equipo y estrategia jurídico-electoral lista desde precampaña",prioridad:"preventiva",items:["Conformar equipo jurídico electoral especializado en los nuevos tipos normativos","Preparar escritos de defensa ante posibles impugnaciones de candidatura","Desarrollar argumentario jurídico sobre inaplicabilidad de causales de nulidad","Mantener comunicación activa con la Sala Regional Guadalajara del TEPJF","Preparar protocolo de respuesta mediática ante apertura de cualquier procedimiento"]},
+  {num:"07",titulo:"Repositorio de Evidencia y Trazabilidad",sub:"Sistema de preservación de pruebas y registros",prioridad:"continua",items:["Crear repositorio digital con respaldo físico de toda la documentación de campaña","Mantener archivo de actos de campaña con fecha cierta, lugar, asistentes y materiales","Documentar todas las interacciones con proveedores, donantes y aliados","Bitácora de incidentes digitales, acusaciones mediáticas y respuestas emitidas","Sistema de custodia de evidencia presentable ante autoridades electorales en cualquier momento"]}
+];
+function getNivelBadge(n){const m={bajo:'<span class="badge badge-bajo">Bajo</span>',medio:'<span class="badge badge-medio">Medio</span>',alto:'<span class="badge badge-alto">Alto</span>',critico:'<span class="badge badge-critico">Crítico</span>'};return m[n]||n;}
+function renderKPIs(){document.getElementById('kpiGrid').innerHTML=DATA_KPI.map(k=>`<div class="card" style="text-align:center;padding:20px 14px;"><div style="font-size:28px;margin-bottom:8px;">${k.icono}</div><div style="font-size:26px;font-weight:800;color:${k.color};margin-bottom:4px;">${k.valor}</div><div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)">${k.label}</div></div>`).join('');}
+function renderReformasResumen(){document.getElementById('reformasResumen').innerHTML=DATA_REFORMAS.map(r=>`<div class="resumen-reforma mb-6"><div class="resumen-reforma-header"><div class="reforma-num ${r.clase}">${r.num}</div><div class="reforma-info"><h3>${r.titulo}</h3><p>${r.subtitulo}</p></div></div><div class="reforma-body">${r.cuerpo}</div><div class="reforma-destacados">${r.destacados.map(d=>`<div class="destacado-item"><span class="icon">${d.icon}</span><span>${d.texto}</span></div>`).join('')}</div></div>`).join('');}
+function renderTipoRiesgos(){document.getElementById('tipoRiesgosGrid').innerHTML=DATA_TIPOS_RIESGO.map(r=>`<div style="padding:16px;border:1px solid var(--border);border-radius:var(--radius);background:rgba(255,255,255,0.02);"><div style="font-size:22px;margin-bottom:8px;">${r.icono}</div><div style="font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:6px;">${r.titulo}</div><div style="font-size:12px;color:var(--text-secondary);line-height:1.5;margin-bottom:10px;">${r.desc}</div>${getNivelBadge(r.nivel)}</div>`).join('');}
+function renderSemaforo(){document.getElementById('semaforoGrid').innerHTML=DATA_SEMAFORO.map(s=>`<div class="semaforo-card ${s.clase}"><div class="sem-icon">${s.icono}</div><div class="sem-label">${s.label}</div><div class="sem-level">${s.nivel}</div><div class="sem-desc">${s.desc}</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${s.progreso}%;background:${s.colorProg};"></div></div></div>`).join('');}
+function renderRiesgos(){document.getElementById('riesgosGrid').innerHTML=DATA_RIESGOS.map(r=>`<div class="riesgo-card"><div class="riesgo-header"><div class="riesgo-icon-label"><span class="riesgo-icon">${r.icono}</span><span class="riesgo-category">${r.categoria}</span></div>${getNivelBadge(r.nivel)}</div><div class="riesgo-desc">${r.desc}</div><div class="riesgo-footer"><span class="riesgo-actor">👤 ${r.actor}</span></div></div>`).join('');}
+function renderMatriz(){document.getElementById('matrizBody').innerHTML=DATA_MATRIZ.map(row=>`<tr><td><span class="reforma-tag ${row.reforma==='R1'?'reforma-1':'reforma-2'}">${row.reforma}</span></td><td style="max-width:180px;font-weight:600;">${row.mecanismo}</td><td style="max-width:240px;">${row.impacto}</td><td>${getNivelBadge(row.nivel)}</td><td style="max-width:160px;font-size:12px;color:var(--text-secondary);">${row.actor}</td><td style="max-width:220px;font-size:12px;color:var(--text-secondary);">${row.accion}</td></tr>`).join('');}
+function renderTimeline(){const dotMap={'completado':'dot-completado','en-proceso':'dot-en-proceso','pendiente':'dot-pendiente','critico':'dot-critico'};document.getElementById('timelineContainer').innerHTML=DATA_TIMELINE.map(item=>`<div class="timeline-item"><div class="timeline-dot ${dotMap[item.estado]||'dot-pendiente'}"></div><div class="timeline-content"><div class="timeline-date">${item.fecha}</div><div class="timeline-title">${item.titulo}</div><div class="timeline-body">${item.cuerpo}</div><div class="timeline-tags">${item.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></div></div>`).join('');}
+function renderEscenarios(){document.getElementById('escenariosGrid').innerHTML=DATA_ESCENARIOS.map(e=>`<div class="escenario-card ${e.clase}"><div class="esc-header"><span class="esc-icon">${e.icono}</span><div><div class="esc-label" style="color:${e.labelColor};">${e.label}</div><div class="esc-title">${e.titulo}</div></div><div class="esc-prob"><div class="esc-prob-val" style="color:${e.probColor};">${e.prob}</div><div class="esc-prob-label">Probabilidad</div></div></div><div class="esc-body">${e.cuerpo}</div><div class="esc-impacts">${e.impactos.map(i=>`<div class="esc-impact-item">${i}</div>`).join('')}</div></div>`).join('');}
+const PMAP={inmediata:'priority-inmediata',urgente:'priority-urgente',preventiva:'priority-preventiva',continua:'priority-continua'};
+const PLABEL={inmediata:'🔴 Prioridad Inmediata',urgente:'🟠 Urgente',preventiva:'🟡 Preventiva',continua:'🔵 Continua'};
+function renderRecomendaciones(){document.getElementById('recGrid').innerHTML=DATA_RECOMENDACIONES.map(r=>`<div class="rec-card"><div class="rec-header"><div class="rec-num">${r.num}</div><div><div class="rec-title">${r.titulo}</div><div class="rec-sub">${r.sub}</div></div></div><ul class="rec-list">${r.items.map(i=>`<li>${i}</li>`).join('')}</ul><span class="rec-priority ${PMAP[r.prioridad]}">${PLABEL[r.prioridad]}</span></div>`).join('');}
+function initNav(){document.querySelectorAll('.nav-item').forEach(item=>{item.addEventListener('click',()=>{const t=item.dataset.section;document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));item.classList.add('active');document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(t).classList.add('active');});});}
+function setDate(){const now=new Date();document.getElementById('currentDate').textContent='Actualizado: '+now.toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'});}
+document.addEventListener('DOMContentLoaded',()=>{setDate();renderKPIs();renderReformasResumen();renderTipoRiesgos();renderSemaforo();renderRiesgos();renderMatriz();renderTimeline();renderEscenarios();renderRecomendaciones();initNav();});
+</script>
+</body>
+</html>
